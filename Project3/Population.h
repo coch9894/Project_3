@@ -2,12 +2,11 @@
 
 #include "Node.h"
 
-#define POP_SIZE 500
-#define NUM_POINTS 81
+#define POP_SIZE 100
 #define ELITES 2
 #define N 5
 #define SIZE 150
-#define FILE_PRINT true
+#define FILE_PRINT false
 
 class Population
 {
@@ -42,10 +41,6 @@ private:
 	double avg_fitness;
 
 	double avg_size;
-
-	double input[NUM_POINTS];
-
-	double output[NUM_POINTS];
 
 	void calc_size();
 

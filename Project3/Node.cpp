@@ -51,6 +51,8 @@ Node::Node(op type)
 			board[i][j] = BOARD[i][j];
 		}
 	}
+
+	id = -2;
 }
 
 Node::~Node(void)
@@ -67,7 +69,7 @@ int Node::size_of( Node * t )
 		{
 			temp += size_of( t->children[count] );
 		}
-		else //( t->child[count] == NULL )
+		else //( t->children[count] == NULL )
 		{
 			temp = 1;
 		}
@@ -82,11 +84,54 @@ Node * Node::copy( Node * t )
 	Node * temp;
 	switch(t->op_type)
 	{
+	case if_food:
+		temp = new Node(if_food);
+		break;
+	case prog2:
+		temp = new Node(prog2);
+		break;
+	case prog3:
+		temp = new Node(prog3);
+		break;
+	case Forward:
+		temp = new Node(Forward);
+		break;
+	case Left:
+		temp = new Node(Left);
+		break;
+	case Right:
+		temp = new Node(Right);
+		break;
+	default:
+		cout << "ERROR, WHIL WHEATON WAS HERE!" << endl;
+		cin >> t->size;
+		exit(-1);
 	}
 
 	temp->op_type = t->op_type;
 	temp->parent = t->parent;
 	temp->size = t->size;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			temp->board[i][j] = t->board[i][j];
+		}
+	}
+
+	int count = 0;
+	while( count < 3 )
+	{
+		if( t->children[count] != NULL )
+		{
+			temp->children[count] = t->copy(t->children[count]);
+		}
+		else
+		{
+			temp->children[count] = NULL;
+		}
+		count++;
+	}
 
 	return temp;
 }
@@ -107,13 +152,17 @@ Node * Node::get_node( int t )
 		{
 			temp = Que.front();
 			Que.pop();
-			//if( temp->child[0] != NULL )
+			if( temp->children[0] != NULL )
 			{
-				//Que.push(temp->child[0]);
+				Que.push(temp->children[0]);
 			}
-			//if( temp->child[1] != NULL )
+			if( temp->children[1] != NULL )
 			{
-				//Que.push(temp->child[1]);
+				Que.push(temp->children[1]);
+			}
+			if( temp->children[2] != NULL )
+			{
+				Que.push(temp->children[2]);
 			}
 			t--;
 		}
@@ -128,14 +177,6 @@ Node * Node::get_node( int t )
 
 void Node::Fitness( int &ts, mouse &m )
 {
-	/* sanity check
-	if( children[0] != NULL )
-		children[0]->parent = this;
-	if( children[1] != NULL )
-		children[1]->parent = this;
-	if( children[2] != NULL )
-		children[2]->parent = this;
-	//*/
 	switch( op_type )
 	{
 	case if_food:		// IF FOOD
@@ -378,6 +419,10 @@ void Node::Fitness( int &ts, mouse &m )
 void Node::Full( int depth, Node* p)
 {
 	parent = p;
+	if( parent == NULL )
+	{
+		id = -1;
+	}
 
 	if( depth >= 1 )
 	{
@@ -408,6 +453,19 @@ void Node::Full( int depth, Node* p)
 				cout << "THIS IS BROKEN" << endl;
 				cin >> count;
 				exit(-1);
+				break;
+			}
+
+			switch( count )
+			{
+			case 0:
+				children[count]->id = 0;
+				break;
+			case 1:
+				children[count]->id = 1;
+				break;
+			case 2:
+				children[count]->id = 2;
 				break;
 			}
 
@@ -442,6 +500,19 @@ void Node::Full( int depth, Node* p)
 				cout << "THIS IS BROKEN" << endl;
 				cin >> count;
 				exit(-1);
+				break;
+			}
+
+			switch( count )
+			{
+			case 0:
+				children[count]->id = 0;
+				break;
+			case 1:
+				children[count]->id = 1;
+				break;
+			case 2:
+				children[count]->id = 2;
 				break;
 			}
 

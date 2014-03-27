@@ -79,6 +79,14 @@ void Population::calc_fitness()
 	{
 		int ts = TS;
 
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				pop[k]->board[i][j] = BOARD[i][j];
+			}
+		}
+
 		mouse m;
 		m.cardinal = r;
 		m.coord[0] = 0;
@@ -95,7 +103,7 @@ void Population::calc_fitness()
 		{
 			pop[k]->Fitness(ts,m);
 		}
-
+		pop[k]->fit = m.fitness;
 		if( m.fitness > best_fitness )
 		{
 			best_fitness = m.fitness;
@@ -183,7 +191,7 @@ void Population::print_avgs(int generation)
 	cout << "These are the average values for generation:" << generation << endl;
 	cout << "Average Size: " << avg_size << endl;
 	cout << "Average Fitness: " << avg_fitness << endl;
-	cout << "Best Fitness: " << best_fitness << endl << endl;
+	cout << "Best Fitness: " << best_fitness << endl;
 	cout << "Expected Fitness: " << expected_fitness << endl;
 	cout << "The Board:" << endl;
 	for( int i = 0; i < 32; i++ )
@@ -211,14 +219,14 @@ void Population::print_avgs(int generation)
 	}
 }
 
-
 void Population::Evolve(int generations)
 {
 	int generation = 0;
 	
-	// filename
+	// filename for graphs
 	ofstream o;
 	o.open("numbers.txt");
+	// filename for fitnesses
 	ofstream file;
 	char sdate[9];
 	char stime[9];
@@ -240,6 +248,11 @@ void Population::Evolve(int generations)
 
 	while( generation <= generations )
 	{
+
+		calc_fitness();
+
+		calc_size();
+
 		if( generation % (generations / 10) == 0 )
 		{
 			print_avgs(generation);
@@ -248,24 +261,27 @@ void Population::Evolve(int generations)
 		if( FILE_PRINT )
 		{
 			file << avg_fitness << " " << best_fitness << endl;
-			for( int i = 0; i < NUM_POINTS; i++ )
+			for( int i = 0; i < 32; i++ )
 			{
-				o << output[i] << " " << pop[best_index]->eval(pop[best_index],input[i]) << endl;
+				for( int j = 0; j < 32; j++ )
+				{
+					if( pop[best_index]->board[i][j] != 0 )
+						o << pop[best_index]->board[i][j] << " ";
+					else
+						o << "  ";
+				}
+				cout << endl;
 			}
 			o.close();
 		}
-
-		calc_fitness();
-
-		calc_size();
 
 		Select();
 
 		Crossover();
 
-		Mutate();
-
 		GenToPop();
+
+		Mutate();
 
 		generation++;
 	}
@@ -283,42 +299,34 @@ void Population::Select()
 			{
 				switch(pop[random]->op_type)
 				{
-				case add:
-					gen[i] = new Add();
+				case if_food:			
+					gen[i] = new Node(if_food);
 					break;
-				case sub:
-					gen[i] = new Sub();
+				case prog2:
+					gen[i] = new Node(prog2);
 					break;
-				case mul:
-					gen[i] = new Mul();
+				case prog3:
+					gen[i] = new Node(prog3);
 					break;
-				case quo:
-					gen[i] = new Quo();
+				case Forward:			
+					gen[i] = new Node(Forward);
+					break;
+				case Left:
+					gen[i] = new Node(Left);
+					break;
+				case Right:
+					gen[i] = new Node(Right);
 					break;
 				}
 
-				if( pop[random]->size < SIZE )
-				{
-					gen[i] = pop[random]->copy(pop[random]);
-				}
-				else
-				{
-					j--;
-				}
+				gen[i] = pop[random]->copy(pop[random]);
 			}
 			else
 			{
 
-				if( pop[random]->fitness < gen[i]->fitness )
+				if( pop[random]->fit < gen[i]->fit )
 				{
-					if( pop[random]->size < SIZE )
-					{
-						gen[i] = pop[random]->copy(pop[random]);
-					}
-					else
-					{
-						j--;
-					}
+					gen[i] = pop[random]->copy(pop[random]);
 				}
 
 			}
@@ -332,77 +340,43 @@ void Population::Crossover()
 	{
 		Node * s1; // source 1
 		Node * s2; // source 2
-		Node * node1; // switch 1
-		Node * node2; // switch 2
 		Node * p1; // parent 1
 		Node * p2; // parent 2
+		int id1; // child ?
+		int id2; // child ?
 
 		int rand1 = (int)rand() % gen[i]->size; // which node to trade
 		int rand2 = (int)rand() % gen[i+1]->size; // which node to trade
 
 		s1 = gen[i]->get_node(rand1); // what we swap
-		
+		id1 = s1->id;
+
 		s2 = gen[i+1]->get_node(rand2); // what we swap
+		id2 = s2->id;
 
 		p1 = s1->parent; // parent
 		p2 = s2->parent; // parent
 
-		node1 = gen[i]->copy(s1); // new memory
-		node2 = gen[i+1]->copy(s2); // new memory
-
-		s1->erase(); // remove the old
-		s2->erase(); // remove the old
-		s1 = NULL; // make the pointer null
-		s2 = NULL; // make the pointer null
-
-		int k = 0;
 		if( p1 != NULL )
 		{
-			while( p1->child[k] != NULL )
-			{
-				k++;
-			}
-			if( p1->child[k] == NULL )
-			{
-				p1->child[k] = node2;
-				node2->parent = p1;
-			}
-			else
-			{
-				cout << "DANGER, THERE BE GHOSTS!" << endl;
-				cin >> k;
-				exit(-1);
-			}
+			p1->children[id1] = s2;
+			s2->parent = p1;
 		}
 		else
 		{
-			gen[i] = node2;
-			node2->parent = NULL;
+			gen[i] = s2;
+			s2->parent = NULL;
 		}
 
-		int j = 0;
 		if( p2 != NULL )
 		{
-			while( p2->child[j] != NULL )
-			{
-				j++;
-			}
-			if( p2->child[j] == NULL )
-			{
-				p2->child[j] = node1;
-				node1->parent = p2;
-			}
-			else
-			{
-				cout << "DANGER, THERE BE GHOSTS!" << endl;
-				cin  >> j;
-				exit(-1);
-			}
+			p2->children[id2] = s1;
+			s1->parent = p2;
 		}
 		else
 		{
-			gen[i+1] = node1;
-			node1->parent = NULL;
+			gen[i+1] = s1;
+			s1->parent = NULL;
 		}
 	}
 }
@@ -414,62 +388,52 @@ void Population::Mutate()
 		double prob = rand();
 		if( prob < .1 )
 		{
-			int value = rand() % gen[i]->size;
-			Node * swap = gen[i]->get_node(value);
+			int value = rand() % pop[i]->size;
+			Node * swap = pop[i]->get_node(value);
 			Node * p = swap->parent;
 			Node * n;
+			int id = swap->id;
 
 			int type = rand() % NON_TERMS;
 			
 			switch(type)
 			{
-			case add:
-				n = new Add();
+			case if_food:			
+				n = new Node(if_food);
 				break;
-			case sub:
-				n = new Sub();
+			case prog2:
+				n = new Node(prog2);
 				break;
-			case mul:
-				n = new Mul();
+			case prog3:
+				n = new Node(prog3);
 				break;
-			case quo:
-				n = new Quo();
+			case Forward:			
+				n = new Node(Forward);
 				break;
-			case IF_:
-				n = new IF();
+			case Left:
+				n = new Node(Left);
+				break;
+			case Right:
+				n = new Node(Right);
 				break;
 			}
 
 			int count = 0;
-			while( count  < CHILDREN )
+			while( count  < 3 )
 			{
-				n->child[count] = swap->copy(swap->child[count]);
+				n->children[count] = swap->copy(swap->children[count]);
 			}
 			swap->erase();
 			swap = NULL;
 
-			int k = 0;
 			if( p != NULL )
 			{
-				while( p->child[k] != NULL )
-				{
-					k++;
-				}
-				if( p->child[k] == NULL )
-				{
-					p->child[k] = n;
-					n->parent = p;
-				}
-				else
-				{
-					cout << "DANGER, THERE BE GHOSTS!" << endl;
-					cin >> k;
-					exit(-1);
-				}
+				p->children[id] = n;
+				n->parent = p;
 			}
 			else
 			{
-				gen[i] = n;
+				pop[i] = n;
 				n->parent = NULL;
 			}
 		}

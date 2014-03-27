@@ -39,8 +39,12 @@ public:
 	Node(op);
 	
 	~Node(void);
+	
+	int id;
 
 	int size;
+
+	double fit;
 
 	int board[32][32];
 
