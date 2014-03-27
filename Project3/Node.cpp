@@ -1,26 +1,73 @@
 #include "StdAfx.h"
 #include "Node.h"
 
+int BOARD[][32] = { { 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
+					{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+					{ 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0 },
+					{ 0, 0, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+				};
 
 Node::Node(op type)
 {
 	op_type = type;
+	
+	for( int i = 0; i < 3; i++ )
+	{
+		children[i] = NULL;
+	}
+
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			board[i][j] = BOARD[i][j];
+		}
+	}
 }
 
 Node::~Node(void)
 {
 }
 
-/*
 int Node::size_of( Node * t )
 {
 	int count = 0;
 	int temp = 1;
-	while( count < CHILDREN )
+	//while( count < CHILDREN )
+	while(count < 10)
 	{
-		if( t->child[count] != NULL )
+		//if( t->child[count] != NULL )
+		if(true)
 		{
-			temp += size_of( t->child[count] );
+			//temp += size_of( t->child[count] );
 		}
 		else //( t->child[count] == NULL )
 		{
@@ -39,7 +86,6 @@ Node * Node::copy( Node * t )
 	{
 	}
 
-	temp->fitness = t->fitness;
 	temp->op_type = t->op_type;
 	temp->parent = t->parent;
 	temp->size = t->size;
@@ -63,13 +109,13 @@ Node * Node::get_node( int t )
 		{
 			temp = Que.front();
 			Que.pop();
-			if( temp->child[0] != NULL )
+			//if( temp->child[0] != NULL )
 			{
-				Que.push(temp->child[0]);
+				//Que.push(temp->child[0]);
 			}
-			if( temp->child[1] != NULL )
+			//if( temp->child[1] != NULL )
 			{
-				Que.push(temp->child[1]);
+				//Que.push(temp->child[1]);
 			}
 			t--;
 		}
@@ -82,7 +128,244 @@ Node * Node::get_node( int t )
 	return 0;
 }
 
-*/
+void Node::Fitness( int &ts, mouse &m )
+{
+	switch( op_type )
+	{
+	case if_food:		// IF FOOD
+		ts--;
+
+		switch( m.cardinal )
+		{
+		case u:
+			if( board[(m.coord[0]-1)%32][m.coord[1]] == 1 )
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[0]->board[i][j] = board[i][j];
+					}
+				}
+				children[0]->Fitness(ts, m);
+			}
+			else
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[1]->board[i][j] = board[i][j];
+					}
+				}
+				children[1]->Fitness(ts, m);
+			}
+			break;
+
+		case d:
+			if( board[(m.coord[0]+1)%32][m.coord[1]] == 1 )
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[0]->board[i][j] = board[i][j];
+					}
+				}
+				children[0]->Fitness(ts, m);
+			}
+			else
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[1]->board[i][j] = board[i][j];
+					}
+				}
+				children[1]->Fitness(ts, m);
+			}
+			break;
+
+		case l:
+			if( board[m.coord[0]][(m.coord[1]-1)%32] == 1 )
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[0]->board[i][j] = board[i][j];
+					}
+				}
+				children[0]->Fitness(ts, m);
+			}
+			else
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[1]->board[i][j] = board[i][j];
+					}
+				}
+				children[1]->Fitness(ts, m);
+			}
+			break;
+
+		case r:
+			if( board[m.coord[0]][(m.coord[1]+1)%32] == 1 )
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[0]->board[i][j] = board[i][j];
+					}
+				}
+				children[0]->Fitness(ts, m);
+			}
+			else
+			{
+				for( int i = 0; i < 32; i++ )
+				{
+					for( int j = 0; j < 32; j++ )
+					{
+						children[1]->board[i][j] = board[i][j];
+					}
+				}
+				children[1]->Fitness(ts, m);
+			}
+			break;
+		}
+		break;
+
+	case prog2:			// EITHER PROG
+	case prog3:
+		ts--;
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				children[0]->board[i][j] = board[i][j];
+			}
+		}
+		children[0]->Fitness(ts,m);
+		ts--;
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				children[1]->board[i][j] = board[i][j];
+			}
+		}
+		children[1]->Fitness(ts,m);
+		if( op_type == prog3 )
+		{
+			ts--;
+			for( int i = 0; i < 32; i++ )
+			{
+				for( int j = 0; j < 32; j++ )
+				{
+					children[2]->board[i][j] = board[i][j];
+				}
+			}
+			children[2]->Fitness(ts,m);
+		}
+		break;
+
+	case Forward:		// FORWARD
+		ts--;
+
+		switch( m.cardinal )
+		{
+		case u:
+			m.coord[0] = (m.coord[0] - 1) % 32;
+			break;
+
+		case d:
+			m.coord[0] = (m.coord[0] + 1) % 32;
+			break;
+
+		case l:
+			m.coord[1] = (m.coord[1] - 1) % 32;
+			break;
+
+		case r:
+			m.coord[1] = (m.coord[1] + 1) % 32;
+			break;
+		}
+
+		if( board[m.coord[0]][m.coord[1]] == 1 )
+		{
+			board[m.coord[0]][m.coord[1]] = 2;
+			m.fitness++;
+		}
+		else
+		{
+			// penalty if I have time
+		}
+
+		if( false )
+		{
+			for( int i = 0; i < 32; i++ )
+			{
+				for( int j = 0; j < 32; j++ )
+				{
+					parent->board[i][j] = board[i][j];
+				}
+			}
+		}
+		break;
+
+	case Left:			// LEFT
+		ts--;
+
+		switch( m.cardinal )
+		{
+		case u:
+			m.cardinal = l;
+			break;
+
+		case d:
+			m.cardinal = r;
+			break;
+
+		case l:
+			m.cardinal = d;
+			break;
+
+		case r:
+			m.cardinal = u;
+			break;
+		}
+
+		break;
+
+	case Right:			// RIGHT
+		ts--;
+
+		switch( m.cardinal )
+		{
+		case u:
+			m.cardinal = r;
+			break;
+
+		case d:
+			m.cardinal = l;
+			break;
+
+		case l:
+			m.cardinal = u;
+			break;
+
+		case r:
+			m.cardinal = d;
+			break;
+		}
+
+		break;
+	}
+}
 
 void Node::Full( int depth, Node* p)
 {
@@ -103,20 +386,21 @@ void Node::Full( int depth, Node* p)
 			{
 			case if_food:			
 				children[count] = new Node(if_food);
-				children[count]->Full(depth, children[count]);
+				children[count]->Full(depth, this);
 				break;
 			case prog2:
 				children[count] = new Node(prog2);
-				children[count]->Full(depth, children[count]);
+				children[count]->Full(depth, this);
 				break;
 			case prog3:
 				children[count] = new Node(prog3);
-				children[count]->Full(depth, children[count]);
+				children[count]->Full(depth, this);
 				break;
 			}
 
 			count++;
-			if( parent->op_type == prog3 && count == 2 )
+
+			if( op_type == prog3 && count == 2 )
 			{
 				int r = rand() % NON_TERMS;
 
@@ -124,15 +408,15 @@ void Node::Full( int depth, Node* p)
 				{
 				case if_food:			
 					children[count] = new Node(if_food);
-					children[count]->Full(depth, children[count]);
+					children[count]->Full(depth, this);
 					break;
 				case prog2:
 					children[count] = new Node(prog2);
-					children[count]->Full(depth, children[count]);
+					children[count]->Full(depth, this);
 					break;
 				case prog3:
 					children[count] = new Node(prog3);
-					children[count]->Full(depth, children[count]);
+					children[count]->Full(depth, this);
 					break;
 				}
 
@@ -164,8 +448,10 @@ void Node::Full( int depth, Node* p)
 				break;
 			}
 
+			children[count]->parent = this;
 			count++;
-			if( parent->op_type == prog3 && count == 2 )
+
+			if( op_type == prog3 && count == 2 )
 			{
 				int r = rand() % TERMS;
 				r = r + NON_TERMS;
@@ -181,9 +467,17 @@ void Node::Full( int depth, Node* p)
 				case Right:
 					children[count] = new Node(Right);
 					break;
+				default:
+					cout << "SHIT" << endl;
+					break;
 				}
-
+				children[count]->parent = this;
 			}
 		}
 	}
+}
+
+void Node::erase()
+{
+
 }

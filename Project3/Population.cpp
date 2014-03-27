@@ -50,18 +50,40 @@ Population::~Population(void)
 
 void Population::calc_fitness()
 {
-	// loop through summing then divide by total individuals
+	// avg / best
 	avg_fitness = 0;
-	best_fitness = 100000;
+	best_fitness = 0;
+	// mouse
+	mouse m;
+	m.cardinal = r;
+	m.coord[0] = 0;
+	m.coord[1] = 0;
+	m.fitness = 0;
+	// how long do we go?
+	int TS = 600;
+
+	// loop through summing then divide by total individuals
+
 	for( int k = 0; k < POP_SIZE; k++ )
 	{
-		double temp = pop[k]->Fitness(pop[k],NUM_POINTS);
-		if( temp < best_fitness )
+		int ts = TS;
+
+		mouse m;
+		m.cardinal = r;
+		m.coord[0] = 0;
+		m.coord[1] = 0;
+		m.fitness = 0;
+
+		while( ts > 0 )
 		{
-			best_fitness = temp;
-			best_index = k;
+			pop[k]->Fitness(ts,m);
+			if( m.fitness > best_fitness )
+			{
+				best_fitness = m.fitness;
+				best_index = k;
+			}
 		}
-		avg_fitness += temp;
+		avg_fitness += m.fitness;
 	}
 	avg_fitness = avg_fitness / POP_SIZE;
 }
@@ -119,6 +141,10 @@ void Population::print_avgs(int generation)
 	cout << "Average Size: " << avg_size << endl;
 	cout << "Average Fitness: " << avg_fitness << endl;
 	cout << "Best Fitness: " << best_fitness << endl << endl;
+}
+
+void Population::Evolve(int generations)
+{
 }
 
 /*

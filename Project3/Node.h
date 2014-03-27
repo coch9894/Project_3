@@ -1,5 +1,4 @@
 #pragma once
-#include "Board.h"
 
 typedef enum op
 {
@@ -14,10 +13,18 @@ typedef enum op
 typedef enum direction
 {
 	u,
+	r,
 	d,
-	l,
-	r
+	l
 }direction;
+
+// create a "mouse" to use
+typedef struct mouse
+{
+	int coord[2];
+	direction cardinal;
+	double fitness;
+}mouse;
 
 #define TERMS 3
 #define NON_TERMS 3
@@ -31,19 +38,15 @@ public:
 	
 	~Node(void);
 
-	direction cardinal;
-
-	int coord[2];
-
 	int size;
 
-	double fitness;
+	int board[32][32];
 
 	op op_type;
 	
 	Node* parent;
 
-	Node* children[];
+	Node* children[3];
 
 	int size_of( Node* );
 
@@ -53,7 +56,7 @@ public:
 
 	void Full(int, Node*);
 
-	double Fitness( Node*, int );
+	void Fitness( int&, mouse&);
 
 	void erase(void);
 
