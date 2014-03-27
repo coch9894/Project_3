@@ -30,6 +30,8 @@ typedef struct mouse
 #define NON_TERMS 3
 #define MAX_DEPTH 2
 
+int BOARD[][32];
+
 class Node
 {
 public:

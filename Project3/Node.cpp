@@ -128,6 +128,14 @@ Node * Node::get_node( int t )
 
 void Node::Fitness( int &ts, mouse &m )
 {
+	/* sanity check
+	if( children[0] != NULL )
+		children[0]->parent = this;
+	if( children[1] != NULL )
+		children[1]->parent = this;
+	if( children[2] != NULL )
+		children[2]->parent = this;
+	//*/
 	switch( op_type )
 	{
 	case if_food:		// IF FOOD
@@ -136,7 +144,7 @@ void Node::Fitness( int &ts, mouse &m )
 		switch( m.cardinal )
 		{
 		case u:
-			if( board[(m.coord[0]-1)%32][m.coord[1]] == 1 )
+			if( board[(m.coord[0]-1+32)%32][m.coord[1]] == 1 )
 			{
 				for( int i = 0; i < 32; i++ )
 				{
@@ -161,7 +169,7 @@ void Node::Fitness( int &ts, mouse &m )
 			break;
 
 		case d:
-			if( board[(m.coord[0]+1)%32][m.coord[1]] == 1 )
+			if( board[(m.coord[0]+1+32)%32][m.coord[1]] == 1 )
 			{
 				for( int i = 0; i < 32; i++ )
 				{
@@ -186,7 +194,7 @@ void Node::Fitness( int &ts, mouse &m )
 			break;
 
 		case l:
-			if( board[m.coord[0]][(m.coord[1]-1)%32] == 1 )
+			if( board[m.coord[0]][(m.coord[1]-1+32)%32] == 1 )
 			{
 				for( int i = 0; i < 32; i++ )
 				{
@@ -211,7 +219,7 @@ void Node::Fitness( int &ts, mouse &m )
 			break;
 
 		case r:
-			if( board[m.coord[0]][(m.coord[1]+1)%32] == 1 )
+			if( board[m.coord[0]][(m.coord[1]+1+32)%32] == 1 )
 			{
 				for( int i = 0; i < 32; i++ )
 				{
@@ -277,19 +285,19 @@ void Node::Fitness( int &ts, mouse &m )
 		switch( m.cardinal )
 		{
 		case u:
-			m.coord[0] = (m.coord[0] - 1) % 32;
+			m.coord[0] = (m.coord[0] - 1+32) % 32;
 			break;
 
 		case d:
-			m.coord[0] = (m.coord[0] + 1) % 32;
+			m.coord[0] = (m.coord[0] + 1+32) % 32;
 			break;
 
 		case l:
-			m.coord[1] = (m.coord[1] - 1) % 32;
+			m.coord[1] = (m.coord[1] - 1+32) % 32;
 			break;
 
 		case r:
-			m.coord[1] = (m.coord[1] + 1) % 32;
+			m.coord[1] = (m.coord[1] + 1+32) % 32;
 			break;
 		}
 
@@ -301,14 +309,8 @@ void Node::Fitness( int &ts, mouse &m )
 		else
 		{
 			// penalty if I have time
-		}
-
-		for( int i = 0; i < 32; i++ )
-		{
-			for( int j = 0; j < 32; j++ )
-			{
-				parent->board[i][j] = board[i][j];
-			}
+			if( board[m.coord[0]][m.coord[1]] != 2)
+				board[m.coord[0]][m.coord[1]] = 3;
 		}
 		break;
 
@@ -402,8 +404,14 @@ void Node::Full( int depth, Node* p)
 				children[count] = new Node(prog3);
 				children[count]->Full(depth, this);
 				break;
+			default:
+				cout << "THIS IS BROKEN" << endl;
+				cin >> count;
+				exit(-1);
+				break;
 			}
 
+			children[count]->parent = this;
 			count++;
 		}
 	}
@@ -429,6 +437,11 @@ void Node::Full( int depth, Node* p)
 				break;
 			case Right:
 				children[count] = new Node(Right);
+				break;
+			default:
+				cout << "THIS IS BROKEN" << endl;
+				cin >> count;
+				exit(-1);
 				break;
 			}
 

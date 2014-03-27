@@ -148,11 +148,27 @@ void Population::print_avgs()
 	cout << "Average Fitness: " << avg_fitness << endl;
 	cout << "Best Fitness: " << best_fitness << endl;
 	cout << "Expected Fitness: " << expected_fitness << endl;
+	cout << "The Board:" << endl;
 	for( int i = 0; i < 32; i++ )
 	{
 		for( int j = 0; j < 32; j++ )
 		{
-			cout << pop[best_index]->board[i][j] << " ";
+			if( BOARD[i][j] != 0 )
+				cout << BOARD[i][j] << " ";
+			else
+				cout << "  ";
+		}
+		cout << endl;
+	}
+	cout << "Solved Board: 2 is a hit, a 3 is a normal move" << endl;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			if( pop[best_index]->board[i][j] != 0 )
+				cout << pop[best_index]->board[i][j] << " ";
+			else
+				cout << "  ";
 		}
 		cout << endl;
 	}
@@ -169,13 +185,33 @@ void Population::print_avgs(int generation)
 	cout << "Average Fitness: " << avg_fitness << endl;
 	cout << "Best Fitness: " << best_fitness << endl << endl;
 	cout << "Expected Fitness: " << expected_fitness << endl;
+	cout << "The Board:" << endl;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			if( BOARD[i][j] != 0 )
+				cout << BOARD[i][j] << " ";
+			else
+				cout << "  ";
+		}
+		cout << endl;
+	}
+	cout << "Solved Board: 2 is a hit, a 3 is a normal move" << endl;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			if( pop[best_index]->board[i][j] != 0 )
+				cout << pop[best_index]->board[i][j] << " ";
+			else
+				cout << "  ";
+		}
+		cout << endl;
+	}
 }
 
-void Population::Evolve(int generations)
-{
-}
 
-/*
 void Population::Evolve(int generations)
 {
 	int generation = 0;
@@ -459,5 +495,3 @@ void Population::GenToPop()
 	calc_fitness();
 	//print_avgs();
 }
-
-*/
