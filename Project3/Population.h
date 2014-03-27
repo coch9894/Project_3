@@ -35,6 +35,8 @@ private:
 
 	int best_index;
 
+	double expected_fitness;
+
 	double best_fitness;
 
 	double avg_fitness;

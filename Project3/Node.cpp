@@ -61,13 +61,11 @@ int Node::size_of( Node * t )
 {
 	int count = 0;
 	int temp = 1;
-	//while( count < CHILDREN )
-	while(count < 10)
+	while(count < 3)
 	{
-		//if( t->child[count] != NULL )
-		if(true)
+		if( t->children[count] != NULL )
 		{
-			//temp += size_of( t->child[count] );
+			temp += size_of( t->children[count] );
 		}
 		else //( t->child[count] == NULL )
 		{
@@ -305,14 +303,11 @@ void Node::Fitness( int &ts, mouse &m )
 			// penalty if I have time
 		}
 
-		if( false )
+		for( int i = 0; i < 32; i++ )
 		{
-			for( int i = 0; i < 32; i++ )
+			for( int j = 0; j < 32; j++ )
 			{
-				for( int j = 0; j < 32; j++ )
-				{
-					parent->board[i][j] = board[i][j];
-				}
+				parent->board[i][j] = board[i][j];
 			}
 		}
 		break;
@@ -365,6 +360,17 @@ void Node::Fitness( int &ts, mouse &m )
 
 		break;
 	}
+
+	if( parent != NULL )
+	{
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				parent->board[i][j] = board[i][j];
+			}
+		}
+	}
 }
 
 void Node::Full( int depth, Node* p)
@@ -377,7 +383,7 @@ void Node::Full( int depth, Node* p)
 
 		int count = 0;
 
-		while( count < 2 )
+		while( count < 3 )
 		{
 
 			int r = rand() % NON_TERMS;
@@ -399,28 +405,6 @@ void Node::Full( int depth, Node* p)
 			}
 
 			count++;
-
-			if( op_type == prog3 && count == 2 )
-			{
-				int r = rand() % NON_TERMS;
-
-				switch( r )
-				{
-				case if_food:			
-					children[count] = new Node(if_food);
-					children[count]->Full(depth, this);
-					break;
-				case prog2:
-					children[count] = new Node(prog2);
-					children[count]->Full(depth, this);
-					break;
-				case prog3:
-					children[count] = new Node(prog3);
-					children[count]->Full(depth, this);
-					break;
-				}
-
-			}
 		}
 	}
 	else // depth == 0 add the leafs
@@ -429,7 +413,7 @@ void Node::Full( int depth, Node* p)
 
 		int count = 0;
 
-		while( count < 2 )
+		while( count < 3 )
 		{
 
 			int r = rand() % TERMS;
@@ -450,34 +434,19 @@ void Node::Full( int depth, Node* p)
 
 			children[count]->parent = this;
 			count++;
-
-			if( op_type == prog3 && count == 2 )
-			{
-				int r = rand() % TERMS;
-				r = r + NON_TERMS;
-
-				switch( r )
-				{
-				case Forward:			
-					children[count] = new Node(Forward);
-					break;
-				case Left:
-					children[count] = new Node(Left);
-					break;
-				case Right:
-					children[count] = new Node(Right);
-					break;
-				default:
-					cout << "SHIT" << endl;
-					break;
-				}
-				children[count]->parent = this;
-			}
 		}
 	}
 }
 
 void Node::erase()
 {
-
+	for( int i = 0; i < 3; i++ )
+	{
+		if( children[i] != NULL )
+		{
+			children[i]->erase();
+			children[i] = NULL;
+			delete children[i];
+		}
+	}
 }

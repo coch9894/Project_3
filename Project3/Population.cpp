@@ -28,7 +28,17 @@ Population::Population(void)
 		count++;
 	}
 
-
+	expected_fitness = 0;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			if( pop[0]->board[i][j] == 1 )
+			{
+				expected_fitness++;
+			}
+		}
+	}
 
 	calc_size();
 
@@ -45,12 +55,13 @@ Population::~Population(void)
 	while( count < POP_SIZE )
 	{
 		pop[count]->erase();
+		delete pop[count];
 	}
 }
 
 void Population::calc_fitness()
 {
-	// avg / best
+	// avg / best / expected
 	avg_fitness = 0;
 	best_fitness = 0;
 	// mouse
@@ -74,14 +85,21 @@ void Population::calc_fitness()
 		m.coord[1] = 0;
 		m.fitness = 0;
 
+		if( pop[k]->board[m.coord[0]][m.coord[1]] == 1 )
+		{
+			m.fitness++;
+			pop[k]->board[m.coord[0]][m.coord[1]] = 2;
+		}
+
 		while( ts > 0 )
 		{
 			pop[k]->Fitness(ts,m);
-			if( m.fitness > best_fitness )
-			{
-				best_fitness = m.fitness;
-				best_index = k;
-			}
+		}
+
+		if( m.fitness > best_fitness )
+		{
+			best_fitness = m.fitness;
+			best_index = k;
 		}
 		avg_fitness += m.fitness;
 	}
@@ -129,6 +147,15 @@ void Population::print_avgs()
 	cout << "Average Size: " << avg_size << endl;
 	cout << "Average Fitness: " << avg_fitness << endl;
 	cout << "Best Fitness: " << best_fitness << endl;
+	cout << "Expected Fitness: " << expected_fitness << endl;
+	for( int i = 0; i < 32; i++ )
+	{
+		for( int j = 0; j < 32; j++ )
+		{
+			cout << pop[best_index]->board[i][j] << " ";
+		}
+		cout << endl;
+	}
 }
 
 void Population::print_avgs(int generation)
@@ -141,6 +168,7 @@ void Population::print_avgs(int generation)
 	cout << "Average Size: " << avg_size << endl;
 	cout << "Average Fitness: " << avg_fitness << endl;
 	cout << "Best Fitness: " << best_fitness << endl << endl;
+	cout << "Expected Fitness: " << expected_fitness << endl;
 }
 
 void Population::Evolve(int generations)
