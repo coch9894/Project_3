@@ -360,22 +360,26 @@ void Population::Crossover()
 		if( p1 != NULL )
 		{
 			p1->children[id1] = s2;
+			s2->id = id1;
 			s2->parent = p1;
 		}
 		else
 		{
 			gen[i] = s2;
+			s2->id = -1;
 			s2->parent = NULL;
 		}
 
 		if( p2 != NULL )
 		{
 			p2->children[id2] = s1;
+			s1->id = id2;
 			s1->parent = p2;
 		}
 		else
 		{
 			gen[i+1] = s1;
+			s1->id = -1;
 			s1->parent = NULL;
 		}
 	}
@@ -418,6 +422,7 @@ void Population::Mutate()
 				break;
 			}
 
+			n->id = swap->id;
 			int count = 0;
 			while( count  < 3 )
 			{
@@ -434,6 +439,7 @@ void Population::Mutate()
 			else
 			{
 				pop[i] = n;
+				n->id = -1;
 				n->parent = NULL;
 			}
 		}

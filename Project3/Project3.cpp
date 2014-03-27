@@ -14,9 +14,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	while( temp != 'q' )
 	{
 		Population* population = new Population();
-		population->print_avgs();
 		population->Evolve(10);
-		population->print_avgs();
 		cin >> temp;
 	}
 	return 0;

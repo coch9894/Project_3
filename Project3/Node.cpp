@@ -111,6 +111,7 @@ Node * Node::copy( Node * t )
 	temp->op_type = t->op_type;
 	temp->parent = t->parent;
 	temp->size = t->size;
+	temp->id = t->id;
 	for( int i = 0; i < 32; i++ )
 	{
 		for( int j = 0; j < 32; j++ )
@@ -340,6 +341,10 @@ void Node::Fitness( int &ts, mouse &m )
 		case r:
 			m.coord[1] = (m.coord[1] + 1+32) % 32;
 			break;
+		default:
+			cout << "BAD FITNESS VALUES!" << endl;
+			cin >> ts;
+			exit(-1);
 		}
 
 		if( board[m.coord[0]][m.coord[1]] == 1 )
