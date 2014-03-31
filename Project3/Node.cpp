@@ -109,6 +109,7 @@ Node * Node::copy( Node * t )
 	}
 
 	temp->op_type = t->op_type;
+	temp->fit = t->fit;
 	temp->parent = t->parent;
 	temp->size = t->size;
 	temp->id = t->id;
@@ -524,6 +525,55 @@ void Node::Full( int depth, Node* p)
 			children[count]->parent = this;
 			count++;
 		}
+	}
+}
+
+void Node::print_tree(int indent)
+{
+	switch( op_type )
+	{
+	case if_food:
+		cout << "IF" << endl;
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[0]->print_tree(indent+1);
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[1]->print_tree(indent+1);
+		cout << endl;
+		break;
+	case prog2:
+		cout << "P2" << endl;
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[0]->print_tree(indent+1);
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[1]->print_tree(indent+1);
+		cout << endl;
+		break;
+	case prog3:
+		cout << "P3" << endl;
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[0]->print_tree(indent+1);
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[1]->print_tree(indent+1);
+		for( int i = indent; i > 0; i-- )
+			cout << " ";
+		children[2]->print_tree(indent+1);
+		cout << endl;
+		break;
+	case Forward:
+		cout << "F" << endl;
+		break;
+	case Left:
+		cout << "L" << endl;
+		break;
+	case Right:
+		cout << "R" << endl;
+		break;
 	}
 }
 

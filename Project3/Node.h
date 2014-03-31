@@ -64,6 +64,8 @@ public:
 
 	void Fitness( int&, mouse&);
 
+	void print_tree( int );
+
 	void erase(void);
 
 	double eval(Node*, double);

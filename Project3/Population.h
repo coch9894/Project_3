@@ -6,7 +6,7 @@
 #define ELITES 2
 #define N 5
 #define SIZE 150
-#define FILE_PRINT false
+#define FILE_PRINT true
 
 class Population
 {
