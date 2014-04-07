@@ -57,6 +57,16 @@ Node::Node(op type)
 
 Node::~Node(void)
 {
+	if( this != NULL )
+	{
+		for( int i = 0; i < 3; i++ )
+		{
+			if( this->children[i] != NULL )
+			{
+				delete children[i];
+			}
+		}
+	}
 }
 
 int Node::size_of( Node * t )

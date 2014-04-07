@@ -244,7 +244,7 @@ void Population::print_avgs(int generation)
 	pop[best_index]->print_tree(1);
 	//*/
 
-	for( int i = 0; i < 32; i++ )
+/*	for( int i = 0; i < 32; i++ )
 	{
 		for( int j = 0; j < 32; j++ )
 		{
@@ -255,6 +255,7 @@ void Population::print_avgs(int generation)
 		}
 		cout << endl;
 	}
+//*/
 	cout << "Solved Board: 2 is a hit, a 3 is a normal move" << endl;
 	cout << "Individual #" << best_index << ":" << endl;
 	for( int i = 0; i < 32; i++ )
@@ -328,11 +329,11 @@ void Population::Evolve(int generations)
 
 		Select();
 
-		Crossover();
+		//Crossover();
 
 		GenToPop();
 
-		Mutate();
+		//Mutate();
 
 		generation++;
 	}
@@ -443,7 +444,7 @@ void Population::Mutate()
 	for( int i = 0; i < POP_SIZE - ELITES; i++ )
 	{
 		double prob = rand();
-		if( prob < .05 )
+		if( prob < .5 )
 		{
 			int value = rand() % pop[i]->size;
 			Node * swap = pop[i]->get_node(value);
@@ -485,6 +486,7 @@ void Population::Mutate()
 			}
 			swap->erase();
 			swap = NULL;
+			delete swap;
 
 			if( p != NULL )
 			{
@@ -506,10 +508,16 @@ void Population::GenToPop()
 	pop[POP_SIZE-1] = pop[best_index]->copy(pop[best_index]);
 	best_index = POP_SIZE - 1;
 
+	Node * temp;
+
 	int i = 0;
 	for( i = 0; i < POP_SIZE - ELITES; i++ )
 	{
-		pop[i] = gen[i]->copy(gen[i]);
+		temp = pop[i];
+		pop[i] = gen[i];
+		temp->erase();
+		temp = NULL;
+		delete temp;
 	}
 	while( i < POP_SIZE )
 	{
