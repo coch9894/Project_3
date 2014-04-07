@@ -376,7 +376,7 @@ void Population::Select()
 			}
 			else
 			{
-				if( pop[random]->fit < gen[i]->fit )
+				if( pop[random]->fit > gen[i]->fit )
 				{
 					gen[i]->erase();
 					delete gen[i];
@@ -412,28 +412,28 @@ void Population::Crossover()
 
 		if( p1 != NULL )
 		{
-			p1->children[id1] = s2;
 			s2->id = id1;
 			s2->parent = p1;
+			p1->children[id1] = s2;
 		}
 		else
 		{
-			gen[i] = s2;
 			s2->id = -1;
 			s2->parent = NULL;
+			gen[i] = s2;
 		}
 
 		if( p2 != NULL )
 		{
-			p2->children[id2] = s1;
 			s1->id = id2;
 			s1->parent = p2;
+			p2->children[id2] = s1;
 		}
 		else
 		{
-			gen[i+1] = s1;
 			s1->id = -1;
 			s1->parent = NULL;
+			gen[i+1] = s1;
 		}
 	}
 }
