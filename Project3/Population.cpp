@@ -79,30 +79,29 @@ void Population::calc_fitness()
 	{
 		int ts = TS;
 
-		for( int i = 0; i < 32; i++ )
-		{
-			for( int j = 0; j < 32; j++ )
-			{
-				pop[k]->board[i][j] = BOARD[i][j];
-			}
-		}
-
 		mouse m;
 		m.cardinal = r;
 		m.coord[0] = 0;
 		m.coord[1] = 0;
 		m.fitness = 0;
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				m.board[i][j] = BOARD[i][j];
+			}
+		}
 
-		if( pop[k]->board[m.coord[0]][m.coord[1]] == 1 )
+		if( m.board[m.coord[0]][m.coord[1]] == 1 )
 		{
 			m.fitness++;
-			pop[k]->board[m.coord[0]][m.coord[1]] = 2;
+			m.board[m.coord[0]][m.coord[1]] = 2;
 		}
 		else
 		{
-			if( pop[k]->board[m.coord[0]][m.coord[1]] != 2 )
+			if( m.board[m.coord[0]][m.coord[1]] != 2 )
 			{
-				pop[k]->board[m.coord[0]][m.coord[1]] = 3;
+				m.board[m.coord[0]][m.coord[1]] = 3;
 			}
 		}
 
@@ -111,6 +110,13 @@ void Population::calc_fitness()
 			pop[k]->Fitness(ts,m);
 		}
 		pop[k]->fit = m.fitness;
+		for( int i = 0; i < 32; i++ )
+		{
+			for( int j = 0; j < 32; j++ )
+			{
+				pop[k]->board[i][j] = m.board[i][j];
+			}
+		}
 
 		/* testing
 		if( k == POP_SIZE - 1 )
@@ -234,7 +240,9 @@ void Population::print_avgs(int generation)
 	cout << endl;
 	//*/
 	
+	/* testing
 	pop[best_index]->print_tree(1);
+	//*/
 
 	for( int i = 0; i < 32; i++ )
 	{
@@ -328,6 +336,8 @@ void Population::Evolve(int generations)
 
 		generation++;
 	}
+
+	pop[best_index]->print_tree(1);
 }
 
 void Population::Select()
@@ -366,12 +376,12 @@ void Population::Select()
 			}
 			else
 			{
-
 				if( pop[random]->fit < gen[i]->fit )
 				{
+					gen[i]->erase();
+					delete gen[i];
 					gen[i] = pop[random]->copy(pop[random]);
 				}
-
 			}
 		}
 	}
@@ -433,7 +443,7 @@ void Population::Mutate()
 	for( int i = 0; i < POP_SIZE - ELITES; i++ )
 	{
 		double prob = rand();
-		if( prob < .1 )
+		if( prob < .05 )
 		{
 			int value = rand() % pop[i]->size;
 			Node * swap = pop[i]->get_node(value);
@@ -469,7 +479,9 @@ void Population::Mutate()
 			int count = 0;
 			while( count  < 3 )
 			{
-				n->children[count] = swap->copy(swap->children[count]);
+				if( swap->children[count] != NULL )
+					n->children[count] = swap->copy(swap->children[count]);
+				count++;
 			}
 			swap->erase();
 			swap = NULL;

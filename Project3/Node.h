@@ -24,6 +24,7 @@ typedef struct mouse
 	int coord[2];
 	direction cardinal;
 	double fitness;
+	int board[32][32];
 }mouse;
 
 #define TERMS 3

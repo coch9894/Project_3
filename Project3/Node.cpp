@@ -187,101 +187,45 @@ void Node::Fitness( int &ts, mouse &m )
 		switch( m.cardinal )
 		{
 		case u:
-			if( board[(m.coord[0]-1+32)%32][m.coord[1]] == 1 )
+			if( m.board[(m.coord[0]-1+32)%32][m.coord[1]] == 1 )
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[0]->board[i][j] = board[i][j];
-					}
-				}
 				children[0]->Fitness(ts, m);
 			}
 			else
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[1]->board[i][j] = board[i][j];
-					}
-				}
 				children[1]->Fitness(ts, m);
 			}
 			break;
 
 		case d:
-			if( board[(m.coord[0]+1+32)%32][m.coord[1]] == 1 )
+			if( m.board[(m.coord[0]+1+32)%32][m.coord[1]] == 1 )
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[0]->board[i][j] = board[i][j];
-					}
-				}
 				children[0]->Fitness(ts, m);
 			}
 			else
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[1]->board[i][j] = board[i][j];
-					}
-				}
 				children[1]->Fitness(ts, m);
 			}
 			break;
 
 		case l:
-			if( board[m.coord[0]][(m.coord[1]-1+32)%32] == 1 )
+			if( m.board[m.coord[0]][(m.coord[1]-1+32)%32] == 1 )
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[0]->board[i][j] = board[i][j];
-					}
-				}
 				children[0]->Fitness(ts, m);
 			}
 			else
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[1]->board[i][j] = board[i][j];
-					}
-				}
 				children[1]->Fitness(ts, m);
 			}
 			break;
 
 		case r:
-			if( board[m.coord[0]][(m.coord[1]+1+32)%32] == 1 )
+			if( m.board[m.coord[0]][(m.coord[1]+1+32)%32] == 1 )
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[0]->board[i][j] = board[i][j];
-					}
-				}
 				children[0]->Fitness(ts, m);
 			}
 			else
 			{
-				for( int i = 0; i < 32; i++ )
-				{
-					for( int j = 0; j < 32; j++ )
-					{
-						children[1]->board[i][j] = board[i][j];
-					}
-				}
 				children[1]->Fitness(ts, m);
 			}
 			break;
@@ -291,33 +235,12 @@ void Node::Fitness( int &ts, mouse &m )
 	case prog2:			// EITHER PROG
 	case prog3:
 		ts--;
-		for( int i = 0; i < 32; i++ )
-		{
-			for( int j = 0; j < 32; j++ )
-			{
-				children[0]->board[i][j] = board[i][j];
-			}
-		}
 		children[0]->Fitness(ts,m);
 		ts--;
-		for( int i = 0; i < 32; i++ )
-		{
-			for( int j = 0; j < 32; j++ )
-			{
-				children[1]->board[i][j] = board[i][j];
-			}
-		}
 		children[1]->Fitness(ts,m);
 		if( op_type == prog3 )
 		{
 			ts--;
-			for( int i = 0; i < 32; i++ )
-			{
-				for( int j = 0; j < 32; j++ )
-				{
-					children[2]->board[i][j] = board[i][j];
-				}
-			}
 			children[2]->Fitness(ts,m);
 		}
 		break;
@@ -348,16 +271,16 @@ void Node::Fitness( int &ts, mouse &m )
 			exit(-1);
 		}
 
-		if( board[m.coord[0]][m.coord[1]] == 1 )
+		if( m.board[m.coord[0]][m.coord[1]] == 1 )
 		{
-			board[m.coord[0]][m.coord[1]] = 2;
+			m.board[m.coord[0]][m.coord[1]] = 2;
 			m.fitness++;
 		}
 		else
 		{
 			// penalty if I have time
-			if( board[m.coord[0]][m.coord[1]] != 2)
-				board[m.coord[0]][m.coord[1]] = 3;
+			if( m.board[m.coord[0]][m.coord[1]] != 2)
+				m.board[m.coord[0]][m.coord[1]] = 3;
 		}
 		break;
 
@@ -408,17 +331,6 @@ void Node::Fitness( int &ts, mouse &m )
 		}
 
 		break;
-	}
-
-	if( parent != NULL )
-	{
-		for( int i = 0; i < 32; i++ )
-		{
-			for( int j = 0; j < 32; j++ )
-			{
-				parent->board[i][j] = board[i][j];
-			}
-		}
 	}
 }
 

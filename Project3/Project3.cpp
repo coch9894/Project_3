@@ -15,7 +15,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		Population* population = new Population();
 		//population->print_avgs();
-		population->Evolve(10);
+		population->Evolve(100);
+		
 		cin >> temp;
 	}
 	return 0;
