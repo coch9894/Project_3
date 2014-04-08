@@ -29,7 +29,7 @@ typedef struct mouse
 
 #define TERMS 3
 #define NON_TERMS 3
-#define MAX_DEPTH 2
+#define MAX_DEPTH 3
 
 int BOARD[][32];
 

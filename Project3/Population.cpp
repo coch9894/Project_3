@@ -380,6 +380,7 @@ void Population::Select()
 				if( pop[random]->fit > gen[i]->fit )
 				{
 					gen[i]->erase();
+					gen[i] = NULL;
 					delete gen[i];
 					gen[i] = pop[random]->copy(pop[random]);
 				}
@@ -508,16 +509,20 @@ void Population::GenToPop()
 	pop[POP_SIZE-1] = pop[best_index]->copy(pop[best_index]);
 	best_index = POP_SIZE - 1;
 
-	Node * temp;
+	for( int k = 0; k < POP_SIZE - ELITES; k++ )
+	{
+		pop[k]->erase();
+		pop[k] = NULL;
+		delete pop[k];
+	}
 
 	int i = 0;
 	for( i = 0; i < POP_SIZE - ELITES; i++ )
 	{
-		temp = pop[i];
-		pop[i] = gen[i];
-		temp->erase();
-		temp = NULL;
-		delete temp;
+		pop[i] = gen[i]->copy(gen[i]);
+		gen[i]->erase();
+		gen[i] = NULL;
+		delete gen[i];
 	}
 	while( i < POP_SIZE )
 	{
