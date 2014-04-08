@@ -333,7 +333,7 @@ void Population::Evolve(int generations)
 
 		GenToPop();
 
-		//Mutate();
+		Mutate();
 
 		generation++;
 	}
@@ -444,8 +444,8 @@ void Population::Mutate()
 {
 	for( int i = 0; i < POP_SIZE - ELITES; i++ )
 	{
-		double prob = rand();
-		if( prob < .5 )
+		int prob = rand() % 100;
+		if( prob < 1 )
 		{
 			int value = rand() % pop[i]->size;
 			Node * swap = pop[i]->get_node(value);
@@ -486,19 +486,19 @@ void Population::Mutate()
 				count++;
 			}
 			swap->erase();
-			swap = NULL;
 			delete swap;
+			swap = NULL;
 
 			if( p != NULL )
 			{
-				p->children[id] = n;
 				n->parent = p;
+				p->children[id] = n;
 			}
 			else
 			{
-				pop[i] = n;
 				n->id = -1;
 				n->parent = NULL;
+				pop[i] = n;
 			}
 		}
 	}
@@ -512,17 +512,17 @@ void Population::GenToPop()
 	for( int k = 0; k < POP_SIZE - ELITES; k++ )
 	{
 		pop[k]->erase();
-		pop[k] = NULL;
 		delete pop[k];
+		pop[k] = NULL;
 	}
 
 	int i = 0;
 	for( i = 0; i < POP_SIZE - ELITES; i++ )
 	{
-		pop[i] = gen[i]->copy(gen[i]);
+		pop[i] = gen[i]->copy(gen[i]);	
 		gen[i]->erase();
-		gen[i] = NULL;
 		delete gen[i];
+		gen[i] = NULL;
 	}
 	while( i < POP_SIZE )
 	{

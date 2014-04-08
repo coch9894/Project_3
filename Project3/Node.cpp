@@ -506,8 +506,8 @@ void Node::erase()
 		if( children[i] != NULL )
 		{
 			children[i]->erase();
-			children[i] = NULL;
 			delete children[i];
+			children[i] = NULL;
 		}
 	}
 }
