@@ -380,7 +380,7 @@ void Node::Full( int depth, Node* p)
 				children[count]->Full(depth, this);
 				break;
 			default:
-				cout << "THIS IS BROKEN" << endl;
+				cout << "FULL IS BROKEN" << endl;
 				cin >> count;
 				exit(-1);
 				break;
@@ -427,7 +427,7 @@ void Node::Full( int depth, Node* p)
 				children[count] = new Node(Right);
 				break;
 			default:
-				cout << "THIS IS BROKEN" << endl;
+				cout << "FULL IS BROKEN" << endl;
 				cin >> count;
 				exit(-1);
 				break;

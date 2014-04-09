@@ -301,10 +301,9 @@ void Population::Evolve(int generations)
 
 	while( generation <= generations )
 	{
+		calc_size();
 
 		calc_fitness();
-
-		calc_size();
 
 		if( generation % (generations / 10) == 0 )
 		{
@@ -334,7 +333,7 @@ void Population::Evolve(int generations)
 
 		GenToPop();
 
-		Mutate();
+		//Mutate();
 
 		generation++;
 	}
@@ -413,6 +412,7 @@ void Population::Crossover()
 		p1 = s1->parent; // parent
 		p2 = s2->parent; // parent
 		
+		///*
 		if( p1 != NULL )
 		{
 			s2->id = id1;
@@ -438,6 +438,7 @@ void Population::Crossover()
 			s1->parent = NULL;
 			gen[i+1] = s1;
 		}
+		//*/
 	}
 }
 
