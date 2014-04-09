@@ -431,12 +431,16 @@ void Population::Crossover()
 			s2->id = id1;
 			s2->parent = p1;
 			p1->children[id1] = s2;
+			p1->children[id1]->id = id1;
+			p1->children[id1]->parent = p1;
 		}
 		else
 		{
 			s2->id = -1;
 			s2->parent = NULL;
 			gen[i] = s2;
+			gen[i]->parent = NULL;
+			gen[i]->id = -1;
 		}
 
 		if( p2 != NULL )
@@ -444,12 +448,16 @@ void Population::Crossover()
 			s1->id = id2;
 			s1->parent = p2;
 			p2->children[id2] = s1;
+			p2->children[id2]->id = id2;
+			p2->children[id2]->parent = p2;
 		}
 		else
 		{
 			s1->id = -1;
 			s1->parent = NULL;
 			gen[i+1] = s1;
+			gen[i+1]->parent = NULL;
+			gen[i+1]->id = -1;
 		}
 		//*/
 	}
