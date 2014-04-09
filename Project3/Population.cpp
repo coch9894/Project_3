@@ -445,13 +445,22 @@ void Population::Mutate()
 	for( int i = 0; i < POP_SIZE - ELITES; i++ )
 	{
 		int prob = rand() % 100;
-		if( prob < 1 )
+		if( prob < 2 )
 		{
 			int value = rand() % pop[i]->size;
 			Node * swap = pop[i]->get_node(value);
-			Node * p = swap->parent;
+			Node * p;
 			Node * n;
 			int id = swap->id;
+
+			if( swap->parent != NULL )
+			{
+				p = swap->parent;
+			}
+			else
+			{
+				p = NULL;
+			}
 
 			int type = rand() % NON_TERMS;
 			
@@ -476,7 +485,7 @@ void Population::Mutate()
 				n = new Node(Right);
 				break;
 			}
-
+			
 			n->id = swap->id;
 			int count = 0;
 			while( count  < 3 )
@@ -485,10 +494,7 @@ void Population::Mutate()
 					n->children[count] = swap->copy(swap->children[count]);
 				count++;
 			}
-			swap->erase();
-			delete swap;
-			swap = NULL;
-
+			
 			if( p != NULL )
 			{
 				n->parent = p;
@@ -500,6 +506,11 @@ void Population::Mutate()
 				n->parent = NULL;
 				pop[i] = n;
 			}
+
+			swap->erase();
+			delete swap;
+			swap = NULL;
+			//*/
 		}
 	}
 }

@@ -184,7 +184,7 @@ Node * Node::get_node( int t )
 		}
 		return temp;
 	}
-	return 0;
+	return NULL;
 }
 
 void Node::Fitness( int &ts, mouse &m )
