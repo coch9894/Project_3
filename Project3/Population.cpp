@@ -417,38 +417,26 @@ void Population::Crossover()
 		{
 			s2->id = id1;
 			s2->parent = p1;
-			p1->children[id1] = s2->copy(s2);
-			s2->erase();
-			delete s2;
-			s2 = NULL;
+			p1->children[id1] = s2;
 		}
 		else
 		{
 			s2->id = -1;
 			s2->parent = NULL;
-			gen[i] = s2->copy(s2);
-			s2->erase();
-			delete s2;
-			s2 = NULL;
+			gen[i] = s2;
 		}
 
 		if( p2 != NULL )
 		{
 			s1->id = id2;
 			s1->parent = p2;
-			p2->children[id2] = s1->copy(s1);
-			s1->erase();
-			delete s1;
-			s1 = NULL;
+			p2->children[id2] = s1;
 		}
 		else
 		{
 			s1->id = -1;
 			s1->parent = NULL;
-			gen[i+1] = s1->copy(s1);
-			s1->erase();
-			delete s1;
-			s1 = NULL;
+			gen[i+1] = s1;
 		}
 	}
 }
