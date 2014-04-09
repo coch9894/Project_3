@@ -56,6 +56,7 @@ Population::~Population(void)
 	{
 		pop[count]->erase();
 		delete pop[count];
+		pop[count] = NULL;
 	}
 }
 
@@ -329,7 +330,7 @@ void Population::Evolve(int generations)
 
 		Select();
 
-		//Crossover();
+		Crossover();
 
 		GenToPop();
 
@@ -411,31 +412,43 @@ void Population::Crossover()
 
 		p1 = s1->parent; // parent
 		p2 = s2->parent; // parent
-
+		
 		if( p1 != NULL )
 		{
 			s2->id = id1;
 			s2->parent = p1;
-			p1->children[id1] = s2;
+			p1->children[id1] = s2->copy(s2);
+			s2->erase();
+			delete s2;
+			s2 = NULL;
 		}
 		else
 		{
 			s2->id = -1;
 			s2->parent = NULL;
-			gen[i] = s2;
+			gen[i] = s2->copy(s2);
+			s2->erase();
+			delete s2;
+			s2 = NULL;
 		}
 
 		if( p2 != NULL )
 		{
 			s1->id = id2;
 			s1->parent = p2;
-			p2->children[id2] = s1;
+			p2->children[id2] = s1->copy(s1);
+			s1->erase();
+			delete s1;
+			s1 = NULL;
 		}
 		else
 		{
 			s1->id = -1;
 			s1->parent = NULL;
-			gen[i+1] = s1;
+			gen[i+1] = s1->copy(s1);
+			s1->erase();
+			delete s1;
+			s1 = NULL;
 		}
 	}
 }
@@ -448,69 +461,51 @@ void Population::Mutate()
 		if( prob < 2 )
 		{
 			int value = rand() % pop[i]->size;
-			Node * swap = pop[i]->get_node(value);
-			Node * p;
-			Node * n;
-			int id = swap->id;
+			Node * s = pop[i]->get_node(value);
 
-			if( swap->parent != NULL )
-			{
-				p = swap->parent;
-			}
-			else
-			{
-				p = NULL;
-			}
-
-			int type = rand() % NON_TERMS;
+			int type = rand() % (NON_TERMS + TERMS);
 			
 			switch(type)
 			{
 			case if_food:			
-				n = new Node(if_food);
+				s->op_type = if_food;
 				break;
 			case prog2:
-				n = new Node(prog2);
+				s->op_type = prog2;
 				break;
 			case prog3:
-				n = new Node(prog3);
+				s->op_type = prog3;
 				break;
 			case Forward:			
-				n = new Node(Forward);
+				s->op_type = Forward;
 				break;
 			case Left:
-				n = new Node(Left);
+				s->op_type = Left;
 				break;
 			case Right:
-				n = new Node(Right);
+				s->op_type = Right;
 				break;
 			}
-			
-			n->id = swap->id;
-			int count = 0;
-			while( count  < 3 )
+
+			if( s->op_type < 3 )
 			{
-				if( swap->children[count] != NULL )
-					n->children[count] = swap->copy(swap->children[count]);
-				count++;
-			}
-			
-			if( p != NULL )
-			{
-				n->parent = p;
-				p->children[id] = n;
+				if( s->children[0] == NULL || s->children[1] == NULL || s->children[2] == NULL )
+				{
+					s->Full(0,s->parent);
+				}
 			}
 			else
 			{
-				n->id = -1;
-				n->parent = NULL;
-				pop[i] = n;
+				for( int count = 0; count < 3; count++ )
+				{
+					if( s->children[count] != NULL )
+					{
+						s->children[count]->erase();
+						delete s->children[count];
+						s->children[count] = NULL;
+					}
+				}
 			}
-
-			swap->erase();
-			delete swap;
-			swap = NULL;
-			//*/
 		}
 	}
 }

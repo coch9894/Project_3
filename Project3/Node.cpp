@@ -85,6 +85,7 @@ int Node::size_of( Node * t )
 		}
 		count++;
 	}
+
 	size = temp;
 	return temp;
 }
@@ -113,7 +114,7 @@ Node * Node::copy( Node * t )
 		temp = new Node(Right);
 		break;
 	default:
-		cout << "ERROR, WHIL WHEATON WAS HERE!" << endl;
+		cout << "ERROR IN COPY FUNCTION!" << endl;
 		cin >> t->size;
 		exit(-1);
 	}
@@ -184,6 +185,7 @@ Node * Node::get_node( int t )
 		}
 		return temp;
 	}
+	cout << " :GET NODE ERROR: RETURNING NULL" << endl;
 	return NULL;
 }
 
