@@ -397,21 +397,34 @@ void Population::Crossover()
 		Node * s2; // source 2
 		Node * p1; // parent 1
 		Node * p2; // parent 2
+		Node * t1; // temp
+		Node * t2; // temp
 		int id1; // child ?
 		int id2; // child ?
 
 		int rand1 = (int)rand() % gen[i]->size; // which node to trade
 		int rand2 = (int)rand() % gen[i+1]->size; // which node to trade
 
-		s1 = gen[i]->get_node(rand1); // what we swap
-		id1 = s1->id;
+		t1 = gen[i]->get_node(rand1); // what we swap
+		id1 = t1->id;
 
-		s2 = gen[i+1]->get_node(rand2); // what we swap
-		id2 = s2->id;
+		t2 = gen[i+1]->get_node(rand2); // what we swap
+		id2 = t2->id;
 
-		p1 = s1->parent; // parent
-		p2 = s2->parent; // parent
+		p1 = t1->parent; // parent
+		p2 = t2->parent; // parent
+
+		s1 = t1->copy(t1); // new node
+		s2 = t2->copy(t2); // new node
+
+		t1->erase();
+		delete t1;
+		t1 = NULL;
 		
+		t2->erase();
+		delete t2;
+		t2 = NULL;
+
 		///*
 		if( p1 != NULL )
 		{
