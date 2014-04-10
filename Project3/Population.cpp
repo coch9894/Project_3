@@ -380,8 +380,8 @@ void Population::Select()
 				if( pop[random]->fit > gen[i]->fit )
 				{
 					gen[i]->erase();
-					gen[i] = NULL;
 					delete gen[i];
+					gen[i] = NULL;
 					gen[i] = pop[random]->copy(pop[random]);
 				}
 			}
@@ -417,27 +417,21 @@ void Population::Crossover()
 		s1 = t1->copy(t1); // new node
 		s2 = t2->copy(t2); // new node
 
-		t1->erase();
-		delete t1;
-		t1 = NULL;
-		
-		t2->erase();
-		delete t2;
-		t2 = NULL;
-
 		///*
 		if( p1 != NULL )
 		{
-			s2->id = id1;
-			s2->parent = p1;
+			p1->children[id1]->erase();
+			delete p1->children[id1];
+			p1->children[id1] = NULL;
 			p1->children[id1] = s2;
 			p1->children[id1]->id = id1;
 			p1->children[id1]->parent = p1;
 		}
 		else
 		{
-			s2->id = -1;
-			s2->parent = NULL;
+			gen[i]->erase();
+			delete gen[i];
+			gen[i] = NULL;
 			gen[i] = s2;
 			gen[i]->parent = NULL;
 			gen[i]->id = -1;
@@ -445,21 +439,31 @@ void Population::Crossover()
 
 		if( p2 != NULL )
 		{
-			s1->id = id2;
-			s1->parent = p2;
+			p2->children[id2]->erase();
+			delete p2->children[id2];
+			p2->children[id2] = NULL;
 			p2->children[id2] = s1;
 			p2->children[id2]->id = id2;
 			p2->children[id2]->parent = p2;
 		}
 		else
 		{
-			s1->id = -1;
-			s1->parent = NULL;
+			gen[i+1]->erase();
+			delete gen[i+1];
+			gen[i+1] = NULL;
 			gen[i+1] = s1;
 			gen[i+1]->parent = NULL;
 			gen[i+1]->id = -1;
 		}
 		//*/
+
+		t1->erase();
+		delete t1;
+		t1 = NULL;
+		
+		t2->erase();
+		delete t2;
+		t2 = NULL;
 	}
 }
 
