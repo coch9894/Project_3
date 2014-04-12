@@ -309,6 +309,10 @@ void Population::Evolve(int generations)
 		{
 			print_avgs(generation);
 		}
+		else
+		{
+			cout << "Generation: " << generation << endl;
+		}
 
 		if( FILE_PRINT )
 		{
@@ -330,10 +334,13 @@ void Population::Evolve(int generations)
 		Select();
 
 		Crossover();
+		
+		//call cross for old broken version
+		//Cross();
 
 		GenToPop();
 
-		//Mutate();
+		Mutate();
 
 		generation++;
 	}
@@ -390,6 +397,50 @@ void Population::Select()
 }
 
 void Population::Crossover()
+{
+	for( int i = 0; i < POP_SIZE - ELITES; i+=2 )
+	{
+		Node * pos1;
+		Node * pos2;
+		Node * temp;
+
+		int rand1 = (int)rand() % gen[i]->size;
+		int rand2 = (int)rand() % gen[i+1]->size;
+
+		pos1 = gen[i]->copy(gen[i]->get_node(rand1));
+		pos2 = gen[i+1]->copy(gen[i+1]->get_node(rand2));
+		temp = pos2->parent;
+
+		if( pos1->parent != NULL )
+		{
+			pos1->parent->children[pos1->id] = pos2;
+		}
+		else
+		{
+			gen[i] = pos2;
+		}
+
+		if( temp != NULL )
+		{
+			temp->children[pos2->id] = pos1;
+		}
+		else
+		{
+			gen[i+1] = pos2;
+		}
+
+		// clean up parent situation
+		pos2->parent = pos1->parent;
+		pos1->parent = temp;
+
+		// clean up ids
+		int id1 = pos2->id;
+		pos2->id = pos1->id;
+		pos1->id = id1;
+	}
+}
+
+void Population::Cross()
 {
 	for( int i = 0; i < POP_SIZE - ELITES; i+=2 )
 	{
@@ -472,7 +523,7 @@ void Population::Mutate()
 	for( int i = 0; i < POP_SIZE - ELITES; i++ )
 	{
 		int prob = rand() % 100;
-		if( prob < 2 )
+		if( prob < 20 )
 		{
 			int value = rand() % pop[i]->size;
 			Node * s = pop[i]->get_node(value);
@@ -505,6 +556,15 @@ void Population::Mutate()
 			{
 				if( s->children[0] == NULL || s->children[1] == NULL || s->children[2] == NULL )
 				{
+					for( int count = 0; count < 3; count++ )
+					{
+						if( s->children[count] != NULL )
+						{
+							s->children[count]->erase();
+							delete s->children[count];
+							s->children[count] = NULL;
+						}
+					}
 					s->Full(0,s->parent);
 				}
 			}
@@ -531,14 +591,24 @@ void Population::GenToPop()
 
 	for( int k = 0; k < POP_SIZE - ELITES; k++ )
 	{
-		pop[k]->erase();
-		delete pop[k];
+		if( pop[k]->id > -50 )
+		{
+			pop[k]->erase();
+			delete pop[k];
+		}
 		pop[k] = NULL;
 	}
 
 	int i = 0;
 	for( i = 0; i < POP_SIZE - ELITES; i++ )
 	{
+		///* quick fix
+		if( gen[i]->id < -50 )
+		{
+			gen[i] = new Node(prog2);
+			gen[i]->Full(0,NULL);
+		}
+		//*/
 		pop[i] = gen[i]->copy(gen[i]);	
 		gen[i]->erase();
 		delete gen[i];

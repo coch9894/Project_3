@@ -4,7 +4,7 @@
 
 #define POP_SIZE 100
 #define ELITES 2
-#define N 5
+#define N 3
 #define SIZE 150
 #define FILE_PRINT true
 
@@ -51,6 +51,8 @@ private:
 	void Select();
 
 	void Crossover();
+
+	void Cross();
 
 	void Mutate();
 

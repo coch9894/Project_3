@@ -53,6 +53,8 @@ Node::Node(op type)
 	}
 
 	id = -2;
+	size = -10;
+	fit = -10;
 }
 
 Node::~Node(void)
